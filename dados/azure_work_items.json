@@ -1,0 +1,137 @@
+{
+  "count": 8,
+  "value": [
+    {
+      "id": 201, "rev": 4,
+      "fields": {
+        "System.Id": 201, "System.WorkItemType": "Bug",
+        "System.Title": "Checkout retorna erro 500 ao aplicar cupom expirado",
+        "System.State": "Active", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.Tags": "checkout; cupom",
+        "System.AreaPath": "Loja\\Pagamentos", "System.IterationPath": "Loja\\Sprint 14",
+        "System.CreatedDate": "2026-10-20T13:02:11Z", "System.ChangedDate": "2026-11-03T09:15:40Z",
+        "System.CreatedBy": {"displayName": "Marina Alves", "uniqueName": "marina.alves@exemplo.com"},
+        "System.AssignedTo": {"displayName": "Carlos Souza", "uniqueName": "carlos.souza@exemplo.com"},
+        "System.Description": "<div>Ao finalizar a compra com um cupom que <b>já expirou</b>, a API responde 500 em vez de uma mensagem de validação para o cliente.</div>",
+        "Microsoft.VSTS.TCM.ReproSteps": "<ol><li>Adicionar item ao carrinho</li><li>Aplicar cupom <code>NATAL2025</code></li><li>POST /api/checkout</li></ol><div>Esperado: 400 com mensagem 'cupom expirado'. Atual: 500.</div><pre>Traceback (most recent call last):\n  File \"loja_demo/api.py\", line 7, in post_checkout\n    return 200, checkout.finalizar(req[\"itens\"], req.get(\"cupom\"))\n  File \"loja_demo/checkout.py\", line 11, in finalizar\n    total = cupons.aplicar_cupom(total, codigo_cupom, hoje)\n  File \"loja_demo/cupons.py\", line 25, in aplicar_cupom\n    raise CupomExpirado(f\"Cupom {codigo} expirou em {cupom['expira_em']}\")\nloja_demo.cupons.CupomExpirado: Cupom NATAL2025 expirou em 2025-12-25</pre>",
+        "Microsoft.VSTS.Common.Priority": 2, "Microsoft.VSTS.Common.Severity": "2 - High",
+        "Custom.UsuariosAfetados": 58
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/201"
+    },
+    {
+      "id": 202, "rev": 3,
+      "fields": {
+        "System.Id": 202, "System.WorkItemType": "Bug",
+        "System.Title": "Alguns clientes não conseguem entrar na conta",
+        "System.State": "New", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.Tags": "login",
+        "System.AreaPath": "Loja\\Conta", "System.IterationPath": "Loja\\Sprint 14",
+        "System.CreatedDate": "2026-10-26T10:00:00Z", "System.ChangedDate": "2026-11-05T08:30:00Z",
+        "System.CreatedBy": {"displayName": "Paula Nunes", "uniqueName": "paula.nunes@exemplo.com"},
+        "System.Description": "<div>O suporte recebe vários relatos de clientes que digitam a senha certa e mesmo assim recebem 'Usuário ou senha inválidos' no POST /api/login. Quem redefine a senha continua sem conseguir entrar.</div>",
+        "Microsoft.VSTS.TCM.ReproSteps": "<div>Não consegui reproduzir com meu usuário de teste. Padrão que o suporte notou: reclamações vêm de contas criadas pelo celular.</div>",
+        "Microsoft.VSTS.Common.Priority": 3, "Microsoft.VSTS.Common.Severity": "3 - Medium",
+        "Custom.UsuariosAfetados": 340
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/202"
+    },
+    {
+      "id": 203, "rev": 2,
+      "fields": {
+        "System.Id": 203, "System.WorkItemType": "Bug",
+        "System.Title": "Relatório mensal de faturamento soma pedidos cancelados",
+        "System.State": "Active", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.Tags": "relatorios; financeiro",
+        "System.AreaPath": "Loja\\Relatorios", "System.IterationPath": "Loja\\Sprint 15",
+        "System.CreatedDate": "2026-10-27T15:00:00Z", "System.ChangedDate": "2026-10-28T10:00:00Z",
+        "System.CreatedBy": {"displayName": "Paula Nunes", "uniqueName": "paula.nunes@exemplo.com"},
+        "System.Description": "<div>GET /api/relatorios/mensal?ano=2026&amp;mes=10 mostra faturamento maior do que o fechamento do financeiro. A diferença bate exatamente com a soma dos pedidos de status <i>cancelado</i>.</div>",
+        "Microsoft.VSTS.TCM.ReproSteps": "<div>Comparar o relatório de outubro com o fechamento do financeiro.</div>",
+        "Microsoft.VSTS.Common.Priority": 1, "Microsoft.VSTS.Common.Severity": "2 - High",
+        "Custom.UsuariosAfetados": 4
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/203"
+    },
+    {
+      "id": 204, "rev": 1,
+      "fields": {
+        "System.Id": 204, "System.WorkItemType": "Bug",
+        "System.Title": "Remover produto do carrinho deixa uma unidade para trás",
+        "System.State": "New", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.Tags": "carrinho",
+        "System.AreaPath": "Loja\\Carrinho", "System.IterationPath": "Loja\\Sprint 15",
+        "System.CreatedDate": "2026-11-02T11:20:00Z", "System.ChangedDate": "2026-11-02T11:20:00Z",
+        "System.CreatedBy": {"displayName": "Marina Alves", "uniqueName": "marina.alves@exemplo.com"},
+        "System.Description": "<div>Quando o mesmo SKU aparece em duas linhas seguidas do carrinho, clicar em remover apaga só uma delas. O produto continua no carrinho e no total.</div>",
+        "Microsoft.VSTS.TCM.ReproSteps": "<ol><li>Adicionar o SKU CAM-001 duas vezes (linhas separadas)</li><li>POST /api/carrinho/remover com sku CAM-001</li></ol><div>Esperado: carrinho sem CAM-001. Atual: ainda existe uma linha.</div>",
+        "Microsoft.VSTS.Common.Priority": 2, "Microsoft.VSTS.Common.Severity": "3 - Medium",
+        "Custom.UsuariosAfetados": 25
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/204"
+    },
+    {
+      "id": 205, "rev": 1,
+      "fields": {
+        "System.Id": 205, "System.WorkItemType": "Bug",
+        "System.Title": "Busca não encontra produtos digitando em minúsculas ou sem acento",
+        "System.State": "New", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.Tags": "busca",
+        "System.AreaPath": "Loja\\Catalogo", "System.IterationPath": "Loja\\Sprint 15",
+        "System.CreatedDate": "2026-10-30T09:00:00Z", "System.ChangedDate": "2026-10-30T09:00:00Z",
+        "System.CreatedBy": {"displayName": "Paula Nunes", "uniqueName": "paula.nunes@exemplo.com"},
+        "System.Description": "<div>GET /api/busca?q=camiseta retorna lista vazia, mas existe 'Camiseta Básica' no catálogo. O mesmo com 'calca' para 'Calça Jeans'.</div>",
+        "Microsoft.VSTS.Common.Priority": 3, "Microsoft.VSTS.Common.Severity": "4 - Low",
+        "Custom.UsuariosAfetados": 120
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/205"
+    },
+    {
+      "id": 206, "rev": 2,
+      "fields": {
+        "System.Id": 206, "System.WorkItemType": "Bug",
+        "System.Title": "Histórico de pedidos não mostra os primeiros pedidos",
+        "System.State": "Active", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.Tags": "pedidos; paginacao",
+        "System.AreaPath": "Loja\\Pedidos", "System.IterationPath": "Loja\\Sprint 14",
+        "System.CreatedDate": "2026-10-22T16:30:00Z", "System.ChangedDate": "2026-10-29T08:00:00Z",
+        "System.CreatedBy": {"displayName": "Marina Alves", "uniqueName": "marina.alves@exemplo.com"},
+        "System.Description": "<div>Na tela Meus Pedidos, a página 1 começa no décimo primeiro pedido. Os 10 pedidos mais antigos nunca aparecem em nenhuma página.</div>",
+        "Microsoft.VSTS.TCM.ReproSteps": "<div>GET /api/pedidos?pagina=1 — o primeiro pedido retornado tem id 11, deveria ser 1.</div>",
+        "Microsoft.VSTS.Common.Priority": 2, "Microsoft.VSTS.Common.Severity": "3 - Medium",
+        "Custom.UsuariosAfetados": 40
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/206"
+    },
+    {
+      "id": 207, "rev": 1,
+      "fields": {
+        "System.Id": 207, "System.WorkItemType": "Bug",
+        "System.Title": "Frete grátis não é aplicado em compra de exatamente R$ 200,00",
+        "System.State": "New", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.Tags": "frete",
+        "System.AreaPath": "Loja\\Pagamentos", "System.IterationPath": "Loja\\Sprint 15",
+        "System.CreatedDate": "2026-11-04T14:00:00Z", "System.ChangedDate": "2026-11-04T14:00:00Z",
+        "System.CreatedBy": {"displayName": "Paula Nunes", "uniqueName": "paula.nunes@exemplo.com"},
+        "System.Description": "<div>A regra do site diz 'frete grátis a partir de R$ 200,00', mas quem compra exatamente R$ 200,00 é cobrado R$ 19,90 de frete.</div>",
+        "Microsoft.VSTS.Common.Priority": 4, "Microsoft.VSTS.Common.Severity": "4 - Low",
+        "Custom.UsuariosAfetados": 6
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/207"
+    },
+    {
+      "id": 208, "rev": 1,
+      "fields": {
+        "System.Id": 208, "System.WorkItemType": "Bug",
+        "System.Title": "Sistema lento às vezes",
+        "System.State": "New", "System.BoardColumn": "Aguardando Desenvolvimento",
+        "System.AreaPath": "Loja", "System.IterationPath": "Loja\\Sprint 15",
+        "System.CreatedDate": "2026-11-05T17:45:00Z", "System.ChangedDate": "2026-11-05T17:45:00Z",
+        "System.CreatedBy": {"displayName": "Paula Nunes", "uniqueName": "paula.nunes@exemplo.com"},
+        "System.Description": "<div>Às vezes fica lento.</div>",
+        "Microsoft.VSTS.Common.Priority": 3, "Microsoft.VSTS.Common.Severity": "3 - Medium"
+      },
+      "url": "https://dev.azure.com/org-demo/loja/_apis/wit/workItems/208"
+    }
+  ]
+}

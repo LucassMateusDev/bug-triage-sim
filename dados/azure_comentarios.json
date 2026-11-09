@@ -1,0 +1,26 @@
+{
+  "201": {"totalCount": 2, "comments": [
+    {"id": 1, "createdBy": {"displayName": "Carlos Souza"}, "createdDate": "2026-10-21T09:00:00Z", "text": "<div>Confirmei: o cupom NATAL2025 venceu em dezembro de 2025 e o front ainda oferece ele.</div>"},
+    {"id": 2, "createdBy": {"displayName": "Marina Alves"}, "createdDate": "2026-11-03T09:15:00Z", "text": "<div>Mais 12 clientes reportaram hoje pelo suporte.</div>"}
+  ]},
+  "202": {"totalCount": 3, "comments": [
+    {"id": 1, "createdBy": {"displayName": "Suporte N1"}, "createdDate": "2026-10-28T10:00:00Z", "text": "<div>Já são mais de 300 tickets de suporte com esse relato. Clientes estão abandonando a compra.</div>"},
+    {"id": 2, "createdBy": {"displayName": "Carlos Souza"}, "createdDate": "2026-10-29T13:00:00Z", "text": "<div>Testei com Maria@Exemplo.com e com maria@exemplo.com. Só o segundo entra.</div>"},
+    {"id": 3, "createdBy": {"displayName": "Suporte N1"}, "createdDate": "2026-11-05T08:30:00Z", "text": "<div>Teclado do celular costuma capitalizar a primeira letra do e-mail.</div>"}
+  ]},
+  "203": {"totalCount": 1, "comments": [
+    {"id": 1, "createdBy": {"displayName": "Paula Nunes"}, "createdDate": "2026-10-28T10:00:00Z", "text": "<div>Financeiro precisa disso para o fechamento de outubro.</div>"}
+  ]},
+  "204": {"totalCount": 0, "comments": []},
+  "205": {"totalCount": 1, "comments": [
+    {"id": 1, "createdBy": {"displayName": "Marina Alves"}, "createdDate": "2026-10-31T09:00:00Z", "text": "<div>Teclado mobile quase nunca coloca acento. Isso afeta muita gente.</div>"}
+  ]},
+  "206": {"totalCount": 1, "comments": [
+    {"id": 1, "createdBy": {"displayName": "Carlos Souza"}, "createdDate": "2026-10-29T08:00:00Z", "text": "<div>Parece que a página 0 funciona e mostra os primeiros 10.</div>"}
+  ]},
+  "207": {"totalCount": 0, "comments": []},
+  "208": {"totalCount": 2, "comments": [
+    {"id": 1, "createdBy": {"displayName": "Carlos Souza"}, "createdDate": "2026-11-06T09:00:00Z", "text": "<div>Qual tela? Qual horário?</div>"},
+    {"id": 2, "createdBy": {"displayName": "Paula Nunes"}, "createdDate": "2026-11-06T09:20:00Z", "text": "<div>Não lembro, aconteceu rapidinho.</div>"}
+  ]}
+}

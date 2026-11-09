@@ -1,0 +1,108 @@
+{
+  "201": {
+    "resumo": "O checkout devolve 500 quando o cliente usa um cupom vencido, em vez de uma resposta de validação.",
+    "causa_provavel": "cupons.aplicar_cupom levanta CupomExpirado (linha 25), mas o handler post_checkout só captura CupomInvalido. A exceção não tratada sobe e vira erro 500.",
+    "arquivos_suspeitos": [
+      {"caminho": "loja_demo/api.py", "linhas": "5-9", "motivo": "post_checkout só trata CupomInvalido; CupomExpirado escapa."},
+      {"caminho": "loja_demo/cupons.py", "linhas": "25", "motivo": "Levanta CupomExpirado, exceção que ninguém captura."}
+    ],
+    "sugestao_correcao": "Em api.post_checkout, capturar também CupomExpirado:\n\nexcept (cupons.CupomInvalido, cupons.CupomExpirado) as e:\n    return 400, {\"erro\": str(e)}\n\nAlternativa: fazer CupomExpirado herdar de CupomInvalido.",
+    "confianca": 0.95,
+    "o_que_verificar": [
+      "Se outros chamadores de aplicar_cupom também ignoram CupomExpirado.",
+      "Adicionar teste: POST /api/checkout com NATAL2025 deve retornar 400.",
+      "Remover do front o cupom vencido, para o cliente nem tentar."
+    ]
+  },
+  "202": {
+    "resumo": "Clientes com letras maiúsculas no e-mail (comum em teclado de celular) não conseguem entrar, mesmo com a senha correta.",
+    "causa_provavel": "O cadastro normaliza o e-mail com .strip().lower() (auth.cadastrar), mas o login só faz .strip(). A busca em USUARIOS falha para qualquer e-mail digitado com maiúscula e cai em 'Usuário ou senha inválidos'. Redefinir a senha não ajuda, porque a chave continua minúscula.",
+    "arquivos_suspeitos": [
+      {"caminho": "loja_demo/auth.py", "linhas": "17-18", "motivo": "login não aplica .lower() ao e-mail antes de consultar USUARIOS, ao contrário de cadastrar (linha 13)."}
+    ],
+    "sugestao_correcao": "Normalizar igual ao cadastro:\n\nemail = req[\"email\"].strip().lower()\n\nIdealmente extrair uma função _normalizar_email usada nos dois lugares.",
+    "confianca": 0.93,
+    "o_que_verificar": [
+      "Adicionar teste de login com 'Maria@Exemplo.com' e 'maria@exemplo.com'.",
+      "Checar outros pontos que comparam e-mail (recuperação de senha, convites).",
+      "Revisar a etiqueta: P3/Medium é baixa para um bug que bloqueia login de ~340 clientes."
+    ]
+  },
+  "203": {
+    "resumo": "O relatório mensal de faturamento inclui pedidos cancelados no total.",
+    "causa_provavel": "total_mensal filtra só por ano e mês e nunca olha o campo status, então pedidos 'cancelado' entram na soma.",
+    "arquivos_suspeitos": [
+      {"caminho": "loja_demo/relatorios.py", "linhas": "5-10", "motivo": "A compreensão da lista não exclui pedidos com status == 'cancelado'."}
+    ],
+    "sugestao_correcao": "Incluir a condição na compreensão:\n\nsum(p[\"total\"] for p in lista if p[\"data\"].year == ano and p[\"data\"].month == mes and p[\"status\"] != \"cancelado\")",
+    "confianca": 0.9,
+    "o_que_verificar": [
+      "Confirmar com o financeiro quais status devem ficar fora (só 'cancelado'? reembolsados?).",
+      "Reconciliar o valor de outubro com o fechamento depois da correção.",
+      "Verificar se outros relatórios reutilizam a mesma regra."
+    ]
+  },
+  "204": {
+    "resumo": "Remover um SKU que aparece em linhas consecutivas deixa uma das linhas no carrinho.",
+    "causa_provavel": "remover_item chama itens.pop(indice) enquanto itera com enumerate sobre a mesma lista. Ao remover o elemento i, o seguinte desliza para a posição i e o laço pula para i+1, deixando a segunda linha duplicada intacta.",
+    "arquivos_suspeitos": [
+      {"caminho": "loja_demo/carrinho.py", "linhas": "10-12", "motivo": "Modifica a lista durante a iteração."}
+    ],
+    "sugestao_correcao": "Não mutar durante a iteração:\n\nitens[:] = [i for i in itens if i[\"sku\"] != sku]\nreturn itens",
+    "confianca": 0.94,
+    "o_que_verificar": [
+      "Teste com 1, 2 e 3 linhas do mesmo SKU, consecutivas e intercaladas.",
+      "Garantir que o chamador espera a lista modificada in place (por isso itens[:] =)."
+    ]
+  },
+  "205": {
+    "resumo": "A busca de produtos diferencia maiúsculas/minúsculas e acentos, então 'camiseta' e 'calca' não acham nada.",
+    "causa_provavel": "buscar usa `termo in p[\"nome\"]`, uma comparação literal de strings sem normalização.",
+    "arquivos_suspeitos": [
+      {"caminho": "loja_demo/busca.py", "linhas": "11-12", "motivo": "Comparação sensível a caixa e acentos."}
+    ],
+    "sugestao_correcao": "Normalizar os dois lados (minúsculas e sem acento) antes de comparar, p.ex. com unicodedata.normalize('NFD') removendo marcas combinantes + .casefold().",
+    "confianca": 0.9,
+    "o_que_verificar": [
+      "Testar 'CAMISETA', 'camiseta', 'calca', 'Calça'.",
+      "Avaliar se o catálogo real usa outro mecanismo de busca (banco/índice) com o mesmo problema."
+    ]
+  },
+  "206": {
+    "resumo": "O histórico de pedidos pula os 10 primeiros pedidos porque a paginação começa no deslocamento errado.",
+    "causa_provavel": "A página é 1-indexada, mas o início é calculado como pagina * TAMANHO_PAGINA. Para pagina=1 isso resulta em 10, e não 0.",
+    "arquivos_suspeitos": [
+      {"caminho": "loja_demo/pedidos.py", "linhas": "15-16", "motivo": "inicio = pagina * TAMANHO_PAGINA ignora que a página 1 deveria começar em 0."}
+    ],
+    "sugestao_correcao": "inicio = (pagina - 1) * TAMANHO_PAGINA\n\nE validar que pagina >= 1.",
+    "confianca": 0.95,
+    "o_que_verificar": [
+      "O front chama com pagina=0 em algum lugar? Há contornos que dependem do bug.",
+      "Teste: página 1 deve começar no id 1; a última página deve conter os restantes."
+    ]
+  },
+  "207": {
+    "resumo": "Compras de exatamente R$ 200,00 pagam frete, contra a regra 'a partir de R$ 200,00'.",
+    "causa_provavel": "calcular_frete usa `total > FRETE_GRATIS_A_PARTIR_DE`; a regra pede `>=`.",
+    "arquivos_suspeitos": [
+      {"caminho": "loja_demo/frete.py", "linhas": "8-9", "motivo": "Comparação estrita (>) exclui o valor limite."}
+    ],
+    "sugestao_correcao": "Trocar para `if total >= FRETE_GRATIS_A_PARTIR_DE:`.",
+    "confianca": 0.95,
+    "o_que_verificar": [
+      "Atenção: o frete é calculado sobre o total JÁ com cupom (checkout.finalizar). Confirmar se a regra vale antes ou depois do desconto.",
+      "Teste de borda com 199.99, 200.00 e 200.01."
+    ]
+  },
+  "208": {
+    "resumo": "Relato genérico de lentidão, sem tela, horário, endpoint ou passos.",
+    "causa_provavel": "Não é possível determinar a causa: o card não traz informação concreta e nenhum trecho de código foi relacionado ao relato.",
+    "arquivos_suspeitos": [],
+    "sugestao_correcao": "Não há correção a sugerir ainda. Pedir ao autor: qual tela/endpoint, horário aproximado, dispositivo/rede e se acontece sempre. Em paralelo, checar métricas de latência (APM) por endpoint no período.",
+    "confianca": 0.05,
+    "o_que_verificar": [
+      "Obter dados do autor antes de qualquer investigação.",
+      "Consultar APM/logs de latência dos últimos dias."
+    ]
+  }
+}
